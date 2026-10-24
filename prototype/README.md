@@ -17,7 +17,7 @@ npm run build
 
 ## Link Demo
 
-GitHub Actions menerbitkan prototipe ke [cafauzi13.github.io/SuruhAja-app](https://cafauzi13.github.io/SuruhAja-app/) setiap ada push ke `main` yang mengubah folder `prototype/`. Jika Pages belum aktif pada repo, workflow akan mencoba mengaktifkannya otomatis.
+GitHub Actions menerbitkan prototipe ke [cafauzi13.github.io/SuruhAja-app](https://cafauzi13.github.io/SuruhAja-app/) setiap ada push ke `main` yang mengubah folder `prototype/`. Aktifkan sekali di **Repository Settings → Pages → Build and deployment → Source: GitHub Actions**, karena token Actions tidak punya izin untuk membuat Pages site pada repo ini.
 
 Di desktop, aplikasi tampil di bingkai ponsel 390 x 844. Pada layar selebar 430 px atau kurang, aplikasi memenuhi layar. Tombol **Demo · Pelanggan / Runner** di header adalah pengalih peran presentasi.
 
