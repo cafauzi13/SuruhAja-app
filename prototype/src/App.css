@@ -467,7 +467,7 @@
   border-radius: 18px;
   color: white;
   background-color: var(--brand-ink);
-  background-image: linear-gradient(90deg, rgb(8 63 45 / 96%) 0%, rgb(8 63 45 / 88%) 70%, rgb(8 63 45 / 82%) 100%), url('/images/service-home.jpg');
+  background-image: linear-gradient(90deg, rgb(8 63 45 / 96%) 0%, rgb(8 63 45 / 88%) 70%, rgb(8 63 45 / 82%) 100%);
   background-position: center;
   background-size: cover;
   text-decoration: none;
@@ -696,6 +696,7 @@
 }
 
 .service-thumb {
+  position: relative;
   width: 128px;
   height: 100%;
   min-height: 98px;
@@ -704,7 +705,7 @@
   display: block;
   overflow: hidden;
   border-radius: 11px;
-  background: #e5f1e5;
+  background: var(--brand-ink);
 }
 
 .service-thumb img {
@@ -713,6 +714,10 @@
   display: block;
   object-fit: cover;
 }
+
+.service-thumb-fallback { position: absolute; inset: 0; display: none; place-items: center; color: #fff; }
+.service-thumb-fallback svg { width: 34px; height: 34px; }
+.service-thumb.image-fallback .service-thumb-fallback { display: grid; }
 
 .trust-strip {
   display: flex;
@@ -790,7 +795,7 @@
 .inbox-unread { width: 22px; height: 22px; flex: 0 0 22px; display: grid; place-items: center; border-radius: 50%; color: white; background: #079447; font-size: 12px; font-weight: 700; }
 
 .profile-reference-screen { padding: 0 20px 28px; }
-.profile-cover { position: relative; height: 172px; margin: 0 -20px; background-color: var(--brand-ink); background-image: linear-gradient(90deg, rgb(6 67 38 / 84%), rgb(8 83 43 / 76%)), url('/images/service-home.jpg'); background-position: center 45%; background-size: cover; }
+.profile-cover { position: relative; height: 172px; margin: 0 -20px; background-color: var(--brand-ink); background-position: center 45%; background-size: cover; }
 .profile-cover-actions { display: flex; justify-content: flex-end; gap: 10px; padding: 14px 16px; }
 .profile-cover-actions button { width: 44px; height: 44px; display: grid; place-items: center; border: 1px solid rgb(255 255 255 / 35%); border-radius: 50%; color: #fff; background: rgb(255 255 255 / 17%); }
 .profile-person { position: relative; display: grid; justify-items: center; margin-top: -47px; text-align: center; }
@@ -995,6 +1000,8 @@
 .catalog-chips { margin: 0 -20px 13px; padding: 0 20px 3px; }
 .catalog-result-label { margin: 0 0 10px; color: var(--teks-redup); font-size: 12px; }
 .detail-illustration { position: relative; height: 150px; display: grid; place-items: center; overflow: hidden; margin: -8px 0 18px; border-radius: 20px; color: var(--hijau-tua); background: #d9efe7; }
+.detail-illustration > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.detail-illustration.image-fallback { color: #fff; background: var(--brand-ink); }
 .detail-illustration.peach { color: #965d1b; background: #f6e7d4; }
 .detail-illustration.blue { background: #deefeb; }
 .detail-illustration.lavender { color: #755d3b; background: #eee8da; }

@@ -18,12 +18,13 @@ const categoryEmojis: Record<string, string> = {
   Lainnya: '✨',
 }
 const serviceImages: Record<string, string> = {
-  Survei: '/images/service-home.jpg',
-  'Titip beli': '/images/service-grocery.jpg',
-  Kebersihan: '/images/service-cleaning.jpg',
-  Pengantaran: '/images/service-delivery.jpg',
-  Lainnya: '/images/service-documents.jpg',
+  Survei: 'images/service-home.jpg',
+  'Titip beli': 'images/service-grocery.jpg',
+  Kebersihan: 'images/service-cleaning.jpg',
+  Pengantaran: 'images/service-delivery.jpg',
+  Lainnya: 'images/service-documents.jpg',
 }
+const serviceImageUrl = (category: string) => `${import.meta.env.BASE_URL}${serviceImages[category] ?? serviceImages.Lainnya}`
 
 function ServiceIcon({ name }: { name: string }) {
   const Icon = serviceIcons[name as keyof typeof serviceIcons] ?? Sparkles
@@ -36,7 +37,7 @@ function ServiceCard({ service }: { service: Service }) {
   const isOpen = openServices[service.id]
   return (
     <Link to={`/katalog/${service.id}`} className="service-card">
-      <span className="service-thumb"><img src={serviceImages[service.category] ?? serviceImages.Lainnya} alt="" loading="lazy" /></span>
+      <span className="service-thumb"><img src={serviceImageUrl(service.category)} alt="" loading="lazy" onError={(event) => { event.currentTarget.hidden = true; event.currentTarget.parentElement?.classList.add('image-fallback') }} /><span className="service-thumb-fallback"><ServiceIcon name={service.icon} /></span></span>
       <span className="service-card-copy"><strong>{service.name}</strong><span>{runner.name} · {service.duration}</span><span className="service-rating"><Star size={13} fill="currentColor" /> {service.rating.toFixed(1)} <span>·</span> {isOpen ? 'Buka' : 'Tutup'}</span></span>
       <span className="service-card-price">{formatRupiah(service.price)}</span>
     </Link>
@@ -67,7 +68,7 @@ export function HomePage() {
     <form className="home-search" onSubmit={(event) => { event.preventDefault(); navigate(`/katalog${searchQuery.trim() ? `?q=${encodeURIComponent(searchQuery.trim())}` : ''}`) }}><Search size={19} /><input aria-label="Cari jasa" placeholder="Cari jasa atau bantuan" value={searchQuery} onChange={(event) => setSearchQuery(event.target.value)} /><button type="button" className="home-role-switch" title={role === 'runner' ? 'Demo Runner' : 'Demo Pelanggan'} aria-label={`Demo ${role === 'runner' ? 'Runner' : 'Pelanggan'}`} onClick={() => { const nextRole = role === 'runner' ? 'customer' : 'runner'; setRole(nextRole); navigate(nextRole === 'runner' ? '/runner' : '/') }}>{role === 'runner' ? 'R' : 'U'}</button></form>
     <div className="home-greeting"><span>Sabtu, 24 Oktober 2026 · Sukolilo</span><h1>Hai, Lilis <span>✳</span></h1></div>
     <div className="quick-category-row">{categories.map(({ name }) => <Link to={`/katalog?kategori=${encodeURIComponent(name)}`} className="quick-category" key={name}><span className="quick-category-art" aria-hidden="true">{categoryEmojis[name] ?? '✨'}</span><small>{name}</small></Link>)}</div>
-    <Link to="/buat" className="request-hero"><div><span className="hero-kicker">MINTA BANTUAN SEKARANG</span><strong>Ada yang bisa dibantu<br />hari ini?</strong><span className="hero-action">Buat permintaan <ChevronRight size={16} /></span></div><span className="hero-orbit"><ArrowUpRight size={26} /></span></Link>
+    <Link to="/buat" className="request-hero" style={{ backgroundImage: `linear-gradient(90deg, rgb(8 63 45 / 96%) 0%, rgb(8 63 45 / 88%) 70%, rgb(8 63 45 / 82%) 100%), url("${import.meta.env.BASE_URL}images/service-home.jpg")` }}><div><span className="hero-kicker">MINTA BANTUAN SEKARANG</span><strong>Ada yang bisa dibantu<br />hari ini?</strong><span className="hero-action">Buat permintaan <ChevronRight size={16} /></span></div><span className="hero-orbit"><ArrowUpRight size={26} /></span></Link>
     {active && <section className="home-section"><SectionHeading title="Aktivitas berjalan" action="Lihat semua" to="/aktivitas" /><Link to={`/pesanan/${currentOrder.id}`} className="running-order"><div className="running-order-top"><StatusPill tone={activeOrder?.status === 'waiting' ? 'orange' : 'green'}>{activeOrder?.status === 'waiting' ? 'Mencari runner' : 'Sedang dikerjakan'}</StatusPill><ChevronRight size={18} /></div><strong>{currentOrder.task}</strong><LocationLine>{currentOrder.location}</LocationLine><div className="running-progress"><span /></div><div className="progress-labels"><span>Runner dalam perjalanan</span><span>12 mnt</span></div></Link></section>}
     <section className="home-section"><SectionHeading title="Available Now" action="Lihat katalog" to="/katalog" /><div className="service-list compact-list">{catalogServices.filter((item) => openServices[item.id]).slice(0, 3).map((service) => <ServiceCard service={service} key={service.id} />)}</div></section>
     <section className="trust-strip"><span><BadgeCheck size={18} /></span><div><strong>Runner terverifikasi</strong><p>Identitas dan ulasan dicek sebelum bertugas.</p></div></section>
@@ -191,7 +192,7 @@ export function ServiceDetailPage() {
   const open = openServices[service.id]
   const book = () => { if (open) { const order = createCatalogOrder(service, when); navigate(`/pesanan/${order.id}`) } }
   return <div className="screen detail-screen"><PageTitle title="Detail jasa" />
-    <div className={`detail-illustration ${service.color}`}><img src={serviceImages[service.category] ?? serviceImages.Lainnya} alt="" /><span><ServiceIcon name={service.icon} /></span><small>JASA RUNNER SUKOLILO</small></div>
+    <div className={`detail-illustration ${service.color}`}><img src={serviceImageUrl(service.category)} alt="" onError={(event) => { event.currentTarget.hidden = true; event.currentTarget.parentElement?.classList.add('image-fallback') }} /><span><ServiceIcon name={service.icon} /></span><small>JASA RUNNER SUKOLILO</small></div>
     <span className="eyebrow detail-category">{service.category.toUpperCase()}</span><h1 className="service-detail-title">{service.name}</h1><div className="detail-runner"><Avatar initials={runner.initials} /><div><strong>{runner.name}</strong><span><RunnerMeta rating={service.rating} /></span></div><ChevronRight size={18} /></div>
     <p className="service-description">{service.description}</p><div className="service-facts"><span><Clock3 size={17} /><b>{service.duration}</b><small>Durasi rata-rata</small></span><span><MapPin size={17} /><b>{runner.distance}</b><small>Dari lokasimu</small></span><span><ShieldCheck size={17} /><b>{runner.trust}%</b><small>Skor tepercaya</small></span></div>
     <InfoCard className="fixed-price-note"><Check size={19} /><div><strong>Harga tetap, tanpa negosiasi</strong><p>Harga ditentukan runner dan tidak berubah saat memesan.</p></div></InfoCard>
@@ -340,7 +341,7 @@ export function ProfilePage() {
   }
   const stats = runnerMode ? [{ value: '4,9', label: 'rating' }, { value: '28', label: 'tugas selesai' }, { value: '98%', label: 'tepercaya' }] : [{ value: '3', label: 'pesanan' }, { value: '2', label: 'ulasan' }, { value: '4', label: 'favorit' }]
   return <div className="screen profile-screen profile-reference-screen">
-    <div className="profile-cover"><div className="profile-cover-actions"><button aria-label="Bagikan profil" onClick={() => setNotice('Profil siap dibagikan')}><Share2 size={19} /></button><button aria-label="Pengaturan profil" onClick={() => setEditing((current) => !current)}><Settings size={19} /></button></div></div>
+    <div className="profile-cover" style={{ backgroundImage: `linear-gradient(90deg, rgb(6 67 38 / 84%), rgb(8 83 43 / 76%)), url("${import.meta.env.BASE_URL}images/service-home.jpg")` }}><div className="profile-cover-actions"><button aria-label="Bagikan profil" onClick={() => setNotice('Profil siap dibagikan')}><Share2 size={19} /></button><button aria-label="Pengaturan profil" onClick={() => setEditing((current) => !current)}><Settings size={19} /></button></div></div>
     <div className="profile-person"><Avatar initials={profileInitials} size="lg" /><h1>{displayName}</h1><p>{runnerMode ? 'Runner terverifikasi' : 'Pelanggan'} · {displayLocation}</p></div>
     <div className="profile-stats">{stats.map((stat) => <div key={stat.label}><strong>{stat.value}</strong><span>{stat.label}</span></div>)}</div>
     <button className="profile-edit-button" onClick={() => setEditing((current) => !current)}><Pencil size={17} />{editing ? 'Tutup edit profil' : 'Ubah profil'}</button>
