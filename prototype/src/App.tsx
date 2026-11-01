@@ -13,7 +13,7 @@ function PhoneShell() {
   const location = useLocation()
   const { role } = useAppState()
   const isRunnerRoute = location.pathname.startsWith('/runner')
-  const isSharedRoute = location.pathname === '/profil' || location.pathname.endsWith('/chat')
+  const isSharedRoute = location.pathname === '/profil' || location.pathname === '/pesan' || location.pathname.endsWith('/chat')
   const runnerMode = isRunnerRoute || (isSharedRoute && role === 'runner')
   const tabs = runnerMode
     ? [
